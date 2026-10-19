@@ -8,7 +8,7 @@ from app.models import User
 from app.schemas import DocumentCreate, DocumentQuery, DocumentQueryResponse, DocumentResponse
 from app.services import DocumentService
 
-router = APIRouter(prefix="/documents", tags=["Documents"])
+router = APIRouter(prefix="/api/documents", tags=["Documents"])
 
 
 @router.post("/upload", response_model=DocumentResponse, status_code=status.HTTP_201_CREATED)

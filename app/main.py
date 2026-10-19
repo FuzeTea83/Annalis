@@ -10,7 +10,7 @@ from app.routers import auth_router, documents_router
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Annalis API", version="1.0.0", prefix="/api")
+app = FastAPI(title="Annalis API", version="1.0.0")
 
 # noinspection bad-argument-type
 app.add_middleware(

@@ -9,7 +9,7 @@ from app.schemas import UserCreate, AuthResponse, UserLogin, UserResponse, Forgo
 from app.services import UserService
 
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
+router = APIRouter(prefix="/api/auth", tags=["Auth"])
 
 @router.post("/register", response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
 def register(user_data: UserCreate, db: Annotated[Session, Depends(get_db)]):
