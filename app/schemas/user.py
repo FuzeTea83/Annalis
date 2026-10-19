@@ -25,6 +25,19 @@ class UserResponse(UserBase):
     admin: bool
 
 class AuthResponse(CamelModel):
-    access_token: str
+    token: str
     token_type: str = "bearer"
     user: UserResponse
+
+class ForgotPasswordRequest(CamelModel):
+    email: EmailStr
+
+class ResetPasswordRequest(CamelModel):
+    token: str
+    new_password: str
+
+class ForgotPasswordResponse(CamelModel):
+    message: str
+
+class ResetPasswordResponse(CamelModel):
+    message: str

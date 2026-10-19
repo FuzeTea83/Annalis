@@ -1,8 +1,11 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
 from config import settings
+from core.middleware import setup_exception_handlers
 from database import engine, Base
 from routers import auth_router, documents_router
 
@@ -22,4 +25,9 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(documents_router)
 
-app.mount("/documents", StaticFiles(directory="documents"), name="documents")
+if not os.path.exists("documents"):
+    os.makedirs("documents")
+if os.path.exists("documents"):
+    app.mount("/documents", StaticFiles(directory="documents"), name="documents")
+
+setup_exception_handlers(app)

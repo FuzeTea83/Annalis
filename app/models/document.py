@@ -9,14 +9,15 @@ class Document(Base):
     __table_args__ = {"mysql_engine": "InnoDB", "mysql_charset": "utf8mb4"}
 
     #--- Identity ---
-    id_document = Column(Integer, primary_key=True, autoincrement=True)
-    id_account = Column(Integer, ForeignKey("users.id_account", ondelete="CASCADE"), nullable=False, index=True)
+    id_document = Column(String(191), primary_key=True)
+    id_account = Column(String(191), ForeignKey("users.id_account", ondelete="CASCADE"), nullable=False, index=True)
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
 
     # --- File Storage ---
     file_path = Column(String(500), nullable=False)
     content_type = Column(String(100), nullable=False)
+    format = Column(String(100), nullable=False)
 
     # --- File Metadata ---
     file_size = Column(Integer, nullable=False)
@@ -27,7 +28,7 @@ class Document(Base):
     sector = Column(String(100), nullable=False)
     sector_year = Column(SmallInteger, nullable=False)
     school_year = Column("school_year", SmallInteger, nullable=False)
-    session = Column("session", SmallInteger, nullable=False)
+    session = Column("session", SmallInteger, nullable=True)
 
     # --- Relationships ---
     owner = relationship("User", back_populates="documents")

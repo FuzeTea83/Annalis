@@ -8,7 +8,7 @@ class User(Base):
     __table_args__ = {"mysql_engine": "InnoDB", "mysql_charset": "utf8mb4"}
 
     # --- Identity ---
-    id_account = Column(Integer, primary_key=True, autoincrement=True)
+    id_account = Column(String(191), primary_key=True)
     email = Column(String(191), unique=True, index=True, nullable=False)
     hashed_password = Column(String(191), nullable=False)
 
