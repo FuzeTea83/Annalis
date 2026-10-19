@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {computed, onMounted} from 'vue'
-import type {DocumentItem, RecentDocumentItem} from '@/types/document'
 import PageTitle from '@/components/PageTitle.vue'
 import DocumentRow from '@/components/layout/DocumentRow.vue'
 import {useAuthStore} from '@/stores/auth'
@@ -26,7 +25,7 @@ const firstName = computed(() => {
 })
 
 const recentDocs = computed(() => {
-  return docsStore.items.filter((doc): doc is RecentDocumentItem => 'viewedAt' in doc && doc.viewedAt != null).sort((a, b) => {
+  return docsStore.items.filter((doc) => doc.viewedAt !== undefined && doc.viewedAt !== null).sort((a, b) => {
     if (!a.viewedAt || !b.viewedAt) return 0
     return new Date(b.viewedAt).getTime() - new Date(a.viewedAt).getTime()
   })
