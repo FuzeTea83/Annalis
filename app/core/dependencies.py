@@ -2,10 +2,10 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from core.exeptions import InvalidTokenError, UserNotFoundError
-from database import get_db
-from core.security import decode_access_token
-from models import User
+from app import get_db
+from app.core.exeptions import InvalidTokenError, UserNotFoundError
+from app.core.security import decode_access_token
+from app.models import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 

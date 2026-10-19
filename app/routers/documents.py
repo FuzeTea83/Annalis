@@ -1,14 +1,12 @@
 from typing import Annotated
-
 from fastapi import APIRouter, Depends, UploadFile, File, Form, status, Query
 from sqlalchemy.orm import Session
 
-from core.dependencies import get_current_user
-from database import get_db
-from models import User
-from schemas.document import DocumentCreate, DocumentQuery, DocumentQueryResponse
-from schemas.document import DocumentResponse
-from services.document_service import DocumentService
+from app import get_db
+from app.core.dependencies import get_current_user
+from app.models import User
+from app.schemas import DocumentCreate, DocumentQuery, DocumentQueryResponse, DocumentResponse
+from app.services import DocumentService
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
 
@@ -39,10 +37,6 @@ def upload_document(
 
     service = DocumentService(db)
     return service.create_from_upload(file, data, current_user)
-
-
-
-
 
 @router.get("/recent", status_code=status.HTTP_200_OK, response_model=DocumentQueryResponse)
 def get_recent_documents(limit: int = 10, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):

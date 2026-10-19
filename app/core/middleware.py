@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
-from core.exeptions import AppError
+from app.core.exeptions import AppError
 
 
 def setup_exception_handlers(app: FastAPI):

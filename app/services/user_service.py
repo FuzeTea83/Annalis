@@ -1,14 +1,11 @@
 import uuid
 from datetime import timedelta
-
 from sqlalchemy.orm import Session
 
-from core.exeptions import InvalidEmailDomainError, InvalidCredentialsError, EmailAlreadyExistsError, InvalidTokenError, \
-    UserNotFoundError
-from models import User
-from schemas import UserResponse, UserCreate, AuthResponse, UserLogin
-from core.security import hash_password, verify_password, create_access_token, create_reset_token, verify_reset_token
-from schemas.user import ForgotPasswordRequest, ForgotPasswordResponse, ResetPasswordRequest, ResetPasswordResponse
+from app.core.exeptions import InvalidEmailDomainError, InvalidCredentialsError, EmailAlreadyExistsError, InvalidTokenError, UserNotFoundError
+from app.core.security import hash_password, verify_password, create_access_token, create_reset_token, verify_reset_token
+from app.models import User
+from app.schemas import UserResponse, UserCreate, AuthResponse, UserLogin, ForgotPasswordRequest, ForgotPasswordResponse, ResetPasswordRequest, ResetPasswordResponse
 
 allowed_domains = ["@etu.univ-amu.fr"]
 

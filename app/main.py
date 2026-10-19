@@ -1,13 +1,12 @@
 import os
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
-from config import settings
-from core.middleware import setup_exception_handlers
-from database import engine, Base
-from routers import auth_router, documents_router
+from app.config import settings
+from app.core.middleware import setup_exception_handlers
+from app.database import engine, Base
+from app.routers import auth_router, documents_router
 
 Base.metadata.create_all(bind=engine)
 

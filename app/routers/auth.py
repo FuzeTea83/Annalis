@@ -1,16 +1,12 @@
 from typing import Annotated
-
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import EmailStr, validate_email, TypeAdapter
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from core.dependencies import get_current_user
-from database import get_db
-from models import User
-from schemas import UserCreate, AuthResponse, UserLogin, UserResponse
-from schemas.user import ForgotPasswordRequest, ResetPasswordRequest
-from services.user_service import UserService
+from app import get_db
+from app.core.dependencies import get_current_user
+from app.models import User
+from app.schemas import UserCreate, AuthResponse, UserLogin, UserResponse, ForgotPasswordRequest, ResetPasswordRequest
+from app.services import UserService
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])

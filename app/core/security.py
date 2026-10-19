@@ -2,6 +2,7 @@ import secrets
 from datetime import datetime, timedelta, timezone
 from jose import jwt, JWTError
 import bcrypt
+
 from app import settings
 
 BCRYPT_MAX_BYTES = 72  # Limite technique de bcrypt
