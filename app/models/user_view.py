@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, ForeignKey, DateTime, func, String
 
 from app import Base
 
-
 class UserView(Base):
     __tablename__ = "user_views"
     __table_args__ = {"mysql_engine": "InnoDB", "mysql_charset": "utf8mb4"}

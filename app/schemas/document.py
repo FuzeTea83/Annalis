@@ -1,7 +1,7 @@
 import datetime
 from typing import Optional
 from pydantic import Field
-from schemas.base import CamelModel
+from .base import CamelModel
 
 class DocumentBase(CamelModel):
     title: str = Field(min_length=1, max_length=255)

@@ -1,18 +1,16 @@
-from datetime import datetime
 import os
 import uuid
+from datetime import datetime
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
 from starlette.responses import StreamingResponse
-
-from core.exeptions import InvalidFileTypeError, UnknownFileError, FileTooLargeError, DocumentNotFoundError
-from models import Document, User
-from models.user_view import UserView
-from schemas.document import DocumentCreate, DocumentQueryResponse, DocumentBase, DocumentResponse, DocumentQuery
 from fastapi.responses import FileResponse
 from urllib.parse import quote
 
-from services import user_service
+from app.core.exeptions import InvalidFileTypeError, UnknownFileError, FileTooLargeError, DocumentNotFoundError
+from app.models import Document, User, UserView
+from app.schemas import DocumentCreate, DocumentQueryResponse, DocumentResponse, DocumentQuery
+from app.services import user_service
 
 ALLOWED_CONTENT_TYPES = {
     "application/pdf",

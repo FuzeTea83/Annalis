@@ -1,7 +1,6 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import EmailStr
 
-from schemas.base import CamelModel
-
+from .base import CamelModel
 
 class UserBase(CamelModel):
     email: EmailStr

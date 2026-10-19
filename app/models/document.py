@@ -1,8 +1,7 @@
-from sqlalchemy import (Column, Integer, String, SmallInteger, ForeignKey, Text, DateTime, func)
+from sqlalchemy import Column, Integer, String, SmallInteger, ForeignKey, Text, DateTime, func
 from sqlalchemy.orm import relationship
 
 from app import Base
-
 
 class Document(Base):
     __tablename__ = "documents"
