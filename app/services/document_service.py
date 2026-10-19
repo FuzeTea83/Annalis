@@ -21,12 +21,25 @@ ALLOWED_CONTENT_TYPES = {
 FILE_SIZE_LIMIT_MB = 10
 DOCUMENT_FOLDER = "documents"
 
+
+
 class DocumentService:
     def __init__(self, db: Session):
         self.db = db
 
     def get_by_id(self, document_id: str) -> Document | None:
         return self.db.query(Document).filter(Document.id_document == document_id).first()
+
+    def get_author_name(self, document: Document) -> str:
+        service = user_service.UserService(self.db)
+        user = service.get_by_id(document.id_account)
+        return f"{user.first_name} {user.last_name}" if user else "Unknown"
+
+    def get_viewed_at(self, document: Document, user_id: str) -> datetime | None:
+        return self.db.query(UserView.viewed_at).filter(
+            UserView.document_id == document.id_document,
+            UserView.user_id == user_id
+        ).scalar()
 
     def create_from_upload(self, file: UploadFile, data: DocumentCreate, current_user: User) -> Document:
         """
@@ -55,7 +68,7 @@ class DocumentService:
             while chunk := file.file.read(8192):
                 buffer.write(chunk)
 
-        db_doc = Document(
+        doc = Document(
             id_document=str(uuid.uuid4()),
             id_account=current_user.id_account,
             title=data.title,
@@ -71,10 +84,10 @@ class DocumentService:
             file_size= 0 if file.size is None else file.size,
         )
 
-        self.db.add(db_doc)
+        self.db.add(doc)
         self.db.commit()
-        self.db.refresh(db_doc)
-        return db_doc
+        self.db.refresh(doc)
+        return doc
 
     def get_document(self, doc_id: str) -> Document:
         """
@@ -168,25 +181,13 @@ class DocumentService:
         total = documents.count()
         return documents.all(), total
 
-    def build_document_response(self, documents: list[Document], total: int) -> DocumentQueryResponse:
+    def build_document_response_single(self, document: Document) -> DocumentResponse:
         """
-        Construit une réponse de requête de documents à partir d'une liste de documents.
+        Construit une réponse de requête à partir d'un document.
         """
-        service = user_service.UserService(self.db)
-        def get_author_name(document: Document) -> str:
-            user = service.get_by_id(document.id_account)
-            return f"{user.first_name} {user.last_name}" if user else "Unknown"
-
-        def get_viewed_at(document: Document, user_id: str) -> datetime | None:
-            return self.db.query(UserView.viewed_at).filter(
-                UserView.document_id == document.id_document,
-                UserView.user_id == user_id
-            ).scalar()
-
-        return DocumentQueryResponse(
-            data=[DocumentResponse(
+        return DocumentResponse(
                 id=document.id_document,
-                author=get_author_name(document),
+                author=self.get_author_name(document),
                 content_type=document.content_type,
                 size=document.file_size,
                 title=document.title,
@@ -198,7 +199,14 @@ class DocumentService:
                 school_year=document.school_year,
                 session=document.session,
                 format=document.format,
-                viewed_at=get_viewed_at(document, document.id_account)
-            ) for document in documents],
+                viewed_at=self.get_viewed_at(document, document.id_account)
+        )
+
+    def build_document_response_multiple(self, documents: list[Document], total: int) -> DocumentQueryResponse:
+        """
+        Construit une réponse de requête de documents à partir d'une liste de documents.
+        """
+        return DocumentQueryResponse(
+            data=[self.build_document_response_single(document) for document in documents],
             total=total
         )

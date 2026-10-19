@@ -36,13 +36,14 @@ def upload_document(
     )
 
     service = DocumentService(db)
-    return service.create_from_upload(file, data, current_user)
+    document = service.create_from_upload(file, data, current_user)
+    return service.build_document_response_single(document)
 
 @router.get("/recent", status_code=status.HTTP_200_OK, response_model=DocumentQueryResponse)
 def get_recent_documents(limit: int = 10, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     service = DocumentService(db)
     documents, total = service.get_recent_views(current_user, limit)
-    return service.build_document_response(documents, total)
+    return service.build_document_response_multiple(documents, total)
 
 
 @router.get("/view", status_code=status.HTTP_200_OK, response_model=DocumentQueryResponse)
@@ -64,7 +65,7 @@ def get_document(
 
     service = DocumentService(db)
     documents, total = service.get_documents(query)
-    return service.build_document_response(documents, total)
+    return service.build_document_response_multiple(documents, total)
 
 @router.get("/{doc_id}/download", status_code=status.HTTP_200_OK)
 def download_document(doc_id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
