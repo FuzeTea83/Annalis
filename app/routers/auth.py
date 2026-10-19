@@ -9,7 +9,7 @@ from app.schemas import UserCreate, AuthResponse, UserLogin, UserResponse, Forgo
 from app.services import UserService
 
 
-router = APIRouter(prefix="/api/auth", tags=["Auth"])
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @router.post("/register", response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
 def register(user_data: UserCreate, db: Annotated[Session, Depends(get_db)]):
@@ -32,12 +32,12 @@ def me(current_user: Annotated[User, Depends(get_current_user)], db: Annotated[S
 def logout():
     pass
 
-@router.post("forgot-password")
+@router.post("/forgot-password")
 def forgot_password(req: ForgotPasswordRequest, db: Annotated[Session, Depends(get_db)]):
     service = UserService(db)
     return service.forgot_password(req)
 
-@router.post("/auth/reset-password")
+@router.post("/reset-password")
 def reset_password(req: ResetPasswordRequest, db: Annotated[Session, Depends(get_db)]):
     service = UserService(db)
     return service.reset_password(req)
