@@ -1,54 +1,86 @@
 <script setup lang="ts">
-import type { DocumentItem } from '@/types/document'
-import { useI18n } from "vue-i18n"
+import type {DocumentItem} from '@/types/document'
+import {useI18n} from "vue-i18n"
 import Avatar from "@/components/ui/Avatar.vue";
 import Icon from "@/components/ui/Icon.vue";
+import {computed} from "vue";
 
-const { t } = useI18n()
+const {t} = useI18n()
 
-defineProps<{ document: DocumentItem }>()
+const props = defineProps<{ document: DocumentItem }>()
 
 const emit = defineEmits<{
   preview: [document: DocumentItem]
   download: [document: DocumentItem]
   report: [document: DocumentItem]
 }>()
+
+const initials = computed(() => {
+  const f = props.document.author.split(' ')[0]?.[0]?.toUpperCase() || ''
+  const l = props.document.author.split(' ')[1]?.[0]?.toUpperCase() || ''
+  return `${f}${l}` || 'NA'
+})
+
+const tone = computed(() => {
+  switch (props.document.format.toUpperCase()) {
+    case 'PDF':
+      return 'blue'
+    case 'DOCX':
+      return 'purple'
+    case 'PPTX':
+      return 'coral'
+    default:
+      return 'green'
+  }
+})
+
+const size = computed(() => {
+  if (props.document.size < 1024) return props.document.size
+  if (props.document.size < 1024 * 1024) return (props.document.size / 1024).toFixed(0) + ' KB'
+  return (props.document.size / (1024 * 1024)).toFixed(0) + ' MB'
+})
+
+const formatedDate = computed(() => {
+  const date = new Date(props.document.createdAt)
+  return date.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short', year: 'numeric'})
+})
+
 </script>
 
 <template>
   <div class="document-row">
-    <span class="file-icon" :class="document.tone">{{ document.format }}</span>
+    <span class="file-icon" :class="tone">{{ document.format.toUpperCase() }}</span>
     <div class="document-copy">
       <strong>{{ document.title }}</strong>
-      <span>{{ document.subject }} · {{ document.format }} · {{ document.size }}</span>
+      <span>{{ document.subject }} · {{ document.format.toUpperCase() }} · {{ size }}</span>
     </div>
     <div class="author">
-      <Avatar :user-initials="document.initials" :green="true"/>
+      <Avatar :user-initials="initials" :green="true"/>
       <span>{{ document.author }}</span>
     </div>
-    <span class="document-date">{{ document.date }}</span>
+    <span class="document-date">{{ formatedDate }}</span>
     <div class="row-actions">
       <button
-        type="button"
-        :title="t('label.visualise')"
-        :aria-label="t('label.visualise')"
-        @click="emit('preview', document)"
+          type="button"
+          :title="t('label.visualise')"
+          :aria-label="t('label.visualise')"
+          @click="emit('preview', document)"
       >
         <Icon icon="Eye" :size="17"/>
       </button>
       <button
-        type="button"
-        :title="t('label.download')"
-        :aria-label="t('label.download')"
-        @click="emit('download', document)"
+          type="button"
+          :title="t('label.download')"
+          :aria-label="t('label.download')"
+          @click="emit('download', document)"
       >
         <Icon icon="Download" :size="17"/>
       </button>
       <button
-        type="button"
-        :title="t('label.report')"
-        :aria-label="t('label.report')"
-        @click="emit('report', document)"
+          type="button"
+          :title="t('label.report')"
+          :aria-label="t('label.report')"
+          @click="emit('report', document)"
       >
         <Icon icon="Report" :size="17"/>
       </button>

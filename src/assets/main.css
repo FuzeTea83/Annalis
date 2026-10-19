@@ -148,7 +148,8 @@ router-link a {
     flex-direction: column;
     gap: 7px;
     font-size: 10px;
-    font-weight: 700
+    font-weight: 700;
+    color: var(--ink)
 }
 
 .form-label span {

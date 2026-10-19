@@ -9,20 +9,40 @@ export class ApiError extends Error {
 interface RequestOptions extends Omit<RequestInit, 'body'> {
     body?: unknown
     auth?: boolean
+    responseType?: 'json' | 'blob'
 }
 
 export async function http<T>(path: string, options: RequestOptions = {}): Promise<T> {
-    const { body, auth = true, headers, ...rest } = options
+    const {body, auth = true, headers, responseType = 'json', ...rest} = options
     const token = localStorage.getItem('token')
+
+    const isFormData = body instanceof FormData
+
+    let requestBody: BodyInit | undefined
+    if (body === undefined) {
+        requestBody = undefined
+    } else if (isFormData) {
+        requestBody = body
+    } else {
+        requestBody = JSON.stringify(body)
+    }
+
+    const defaultHeaders: Record<string, string> = {
+        Accept: responseType === 'blob' ? '*/*' : 'application/json',
+    }
+
+    if (body !== undefined && !isFormData) {
+        defaultHeaders['Content-Type'] = 'application/json'
+    }
+
     const response = await fetch(`${BASE}${path}`, {
         ...rest,
         headers: {
-            Accept: 'application/json',
-            ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
-            ...(auth && token ? { Authorization: `Bearer ${token}` } : {}),
+            ...defaultHeaders,
+            ...(auth && token ? {Authorization: `Bearer ${token}`} : {}),
             ...headers,
         },
-        body: body !== undefined ? JSON.stringify(body) : undefined,
+        body: requestBody,
     })
 
     if (response.status === 401 && auth) {
@@ -38,13 +58,14 @@ export async function http<T>(path: string, options: RequestOptions = {}): Promi
         )
     }
     if (response.status === 204) return undefined as T
+    if (responseType === 'blob') return response.blob() as Promise<T>
     return response.json()
 }
 
 export const api = {
-    get: <T>(path: string, opts?: RequestOptions) => http<T>(path, { ...opts, method: 'GET' }),
-    post: <T>(path: string, body?: unknown, opts?: RequestOptions) => http<T>(path, { ...opts, method: 'POST', body }),
-    put: <T>(path: string, body?: unknown, opts?: RequestOptions) => http<T>(path, { ...opts, method: 'PUT', body }),
-    patch: <T>(path: string, body?: unknown, opts?: RequestOptions) => http<T>(path, { ...opts, method: 'PATCH', body }),
-    delete: <T>(path: string, opts?: RequestOptions) => http<T>(path, { ...opts, method: 'DELETE' }),
+    get: <T>(path: string, opts?: RequestOptions) => http<T>(path, {...opts, method: 'GET'}),
+    post: <T>(path: string, body?: unknown, opts?: RequestOptions) => http<T>(path, {...opts, method: 'POST', body}),
+    put: <T>(path: string, body?: unknown, opts?: RequestOptions) => http<T>(path, {...opts, method: 'PUT', body}),
+    patch: <T>(path: string, body?: unknown, opts?: RequestOptions) => http<T>(path, {...opts, method: 'PATCH', body}),
+    delete: <T>(path: string, opts?: RequestOptions) => http<T>(path, {...opts, method: 'DELETE'}),
 }

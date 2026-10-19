@@ -1,16 +1,16 @@
 export interface DocumentItem {
+  id: string
   title: string
   description?: string
   createdAt: Date
   contentType: string
-  course: string
+  format: string
+  subject: string
   sector: string
   sector_year: number
   school_year: number
-  session: 0 | 1 | 2
-  owner: string
-  owner_initials: string
-  date: string
-  tone: string
+  session?: 1 | 2
+  author: string
+  size: number
+  viewedAt?: Date
 }
-

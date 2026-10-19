@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import PageTitle from '@/components/PageTitle.vue'
 import DocumentRow from '@/components/layout/DocumentRow.vue'
-import { useFiltersStore } from '@/stores/filters'
-import { useDocumentsStore } from '@/stores/documents'
-import { usePreviewStore } from '@/stores/preview'
-import { useDownload } from '@/composables/useDownload'
+import {useFiltersStore} from '@/stores/filters'
+import {useDocumentsStore} from '@/stores/documents'
+import {usePreviewStore} from '@/stores/preview'
+import {useDownload} from '@/composables/useDownload'
 import Icon from "@/components/ui/Icon.vue";
 
 const filters = useFiltersStore()
@@ -16,23 +16,18 @@ const { downloadDocument } = useDownload()
 const sortBy = ref('recent')
 
 onMounted(() => {
-  if (!docs.items.length) docs.fetchAll()
+  if (!docs.items.length) docs.fetchAll({ page: 1, page_size: 20 })
 })
 
 const filteredDocuments = computed(() => {
   const query = filters.search.toLowerCase().trim()
 
-  const list = docs.items.filter((item) => {
+  return docs.items.filter((item) => {
     const matchesQuery = !query || `${item.title} ${item.subject} ${item.author}`.toLowerCase().includes(query)
     const matchesSubject = filters.subjectFilter === 'Toutes les matières' || item.subject === filters.subjectFilter
     const matchesFormat = filters.formatFilter === 'Tous les formats' || item.format.toUpperCase() === filters.formatFilter.toUpperCase()
     return matchesQuery && matchesSubject && matchesFormat
   })
-
-  //if (sortBy.value === 'downloads') {
-  //  return [...list].sort((a, b) => (b.downloads ?? 0) - (a.downloads ?? 0))
-  //}
-  return [...list].sort((a, b) => b.id - a.id)
 })
 </script>
 

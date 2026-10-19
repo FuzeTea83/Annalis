@@ -4,7 +4,8 @@ import AnnalisButton from "@/components/ui/AnnalisButton.vue";
 import {computed} from "vue";
 
 const props = defineProps<{
-  document: DocumentItem
+  document: DocumentItem,
+  url: string
 }>()
 
 const emit = defineEmits<{
@@ -13,9 +14,6 @@ const emit = defineEmits<{
 }>()
 
 
-const BASE = import.meta.env.VITE_API_URL ?? '/api'
-
-const pdfUrl = computed(() => `${BASE}/documents/${props.document.id}/view`)
 const canPreview = computed(() => props.document.format.toUpperCase() === 'PDF')
 
 function onBackdropClick(event: MouseEvent) {
@@ -36,13 +34,13 @@ function onBackdropClick(event: MouseEvent) {
 
       <object
           v-if="canPreview"
-          :data="pdfUrl"
+          :data="url"
           type="application/pdf"
           class="preview-frame"
       >
         <p class="preview-placeholder">
           Aperçu non disponible.
-          <a :href="pdfUrl" target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a>
+          <a :href="url" target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a>
         </p>
       </object>
 

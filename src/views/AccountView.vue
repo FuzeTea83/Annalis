@@ -26,7 +26,7 @@ function saveProfile() {
   if (auth.user) {
     auth.user.firstName = form.firstName
     auth.user.lastName = form.lastName
-    auth.user.name = fullName.value
+    auth.user.firstName = fullName.value
     auth.user.email = form.email
     auth.user.initials = initials.value
   }

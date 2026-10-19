@@ -20,7 +20,7 @@ const emit = defineEmits<{
   navigate: [view: View]
 }>()
 
-const userName = computed(() => auth.user?.name ?? '')
+const userName = computed(() => `${auth.user?.firstName} ${auth.user?.lastName}`)
 const userInitials = computed(() => {
   if (auth.user?.initials) return auth.user.initials
   return ''

@@ -1,22 +1,27 @@
 <script setup lang="ts">
-import {ref} from 'vue'
-import PageTitle from '../components/PageTitle.vue'
+import {computed, ref} from 'vue'
+import PageTitle from '@/components/PageTitle.vue'
 import {useDocumentsStore} from '@/stores/documents'
-import {useAuthStore} from '@/stores/auth'
 import {documentsApi} from '@/api/documents'
-import type {DocumentItem} from '@/types/document'
 import AnnalisButton from "@/components/ui/AnnalisButton.vue";
 
 const docsStore = useDocumentsStore()
-const auth = useAuthStore()
 
 const selectedFile = ref<File | null>(null)
 const title = ref('')
-const subject = ref('')
-const level = ref('Licence 1')
 const description = ref('')
+const subject = ref('')
+const sector = ref('Licence 1')
+const sector_year = ref('Licence 1')
+const school_year = ref('Licence 1')
+const session = ref<1 | 2 | null>(null)
 const message = ref('')
 const isSuccess = ref(false)
+
+const schoolYears = computed(() => {
+  const currentYear = new Date().getFullYear()
+  return Array.from({ length: 5 }, (_, i) => `${currentYear + i}/${currentYear + i + 1}`)
+})
 
 function onFileChange(event: Event) {
   const target = event.target as HTMLInputElement
@@ -24,7 +29,6 @@ function onFileChange(event: Event) {
     selectedFile.value = target.files[0]
     message.value = ''
     if (!title.value) {
-      // Pré-remplit le titre à partir du nom de fichier sans extension
       title.value = target.files[0].name.replace(/\.[^/.]+$/, '').replaceAll('-', ' ')
     }
   }
@@ -47,21 +51,6 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1).replace('.', ',')} Mo`
 }
 
-function getFileFormat(filename: string): string {
-  const ext = filename.split('.').pop()?.toUpperCase()
-  if (ext === 'PDF' || ext === 'DOCX' || ext === 'PPTX') return ext
-  return 'PDF'
-}
-
-function getToneForFormat(format: string): string {
-  switch (format) {
-    case 'PDF': return 'blue'
-    case 'DOCX': return 'purple'
-    case 'PPTX': return 'coral'
-    default: return 'green'
-  }
-}
-
 async function submitForm() {
   if (!selectedFile.value) {
     isSuccess.value = false
@@ -74,13 +63,15 @@ async function submitForm() {
     return
   }
 
-  const format = getFileFormat(selectedFile.value.name)
   const formData = new FormData()
   formData.append('file', selectedFile.value)
   formData.append('title', title.value.trim())
-  formData.append('subject', subject.value)
-  formData.append('level', level.value)
   formData.append('description', description.value)
+  formData.append('subject', subject.value)
+  formData.append('sector', sector.value)
+  formData.append('sector_year', String(sector_year.value.match(/(\d+)/)?.[0] || '1'))
+  formData.append('school_year', String(school_year.value.match(/(\d+)/)?.[0] || '2000'))
+  formData.append('session', String(session.value ?? ''))
 
   try {
     const newDocument = await documentsApi.upload(formData)
@@ -90,6 +81,10 @@ async function submitForm() {
     selectedFile.value = null
     title.value = ''
     subject.value = ''
+    sector.value = ''
+    sector_year.value = ''
+    school_year.value = ''
+    session.value = null
     description.value = ''
   } catch (error) {
     isSuccess.value = false
@@ -106,7 +101,6 @@ async function submitForm() {
   />
 
   <form class="upload-card" @submit.prevent="submitForm">
-    <!-- Étape 1 : Fichier -->
     <div class="form-step">
       <span class="step-number">1</span>
       <div class="step-content">
@@ -138,7 +132,6 @@ async function submitForm() {
 
     <div class="form-divider"></div>
 
-    <!-- Étape 2 : Informations -->
     <div class="form-step">
       <span class="step-number">2</span>
       <div class="step-content">
@@ -166,13 +159,31 @@ async function submitForm() {
           </label>
 
           <label class="form-label">
+            Section
+            <select v-model="sector">
+              <option value="" disabled>Choisir une section</option>
+              <option>Informatique</option>
+              <option>Matériaux</option>
+              <option>Peip</option>
+            </select>
+          </label>
+
+          <label class="form-label">
             Niveau
-            <select v-model="level">
+            <select v-model="sector_year">
               <option>Licence 1</option>
               <option>Licence 2</option>
               <option>Licence 3</option>
               <option>Master 1</option>
               <option>Master 2</option>
+            </select>
+          </label>
+
+          <label class="form-label">
+            Année scolaire
+            <select v-model="school_year">
+              <option value="" disabled>Choisir une année scolaire</option>
+              <option v-for="year in schoolYears" :key="year">{{ year }}</option>
             </select>
           </label>
 
@@ -285,7 +296,8 @@ async function submitForm() {
 
 .step-content h2, .account-card h2 {
   font-size: 15px;
-  font-weight: 500
+  font-weight: 500;
+  color: var(--ink)
 }
 
 .step-content p {

@@ -1,16 +1,10 @@
 import type { DocumentItem } from '@/types/document'
-
-const BASE = import.meta.env.VITE_API_URL ?? '/api'
+import {documentsApi} from "@/api/documents.ts";
 
 export function useDownload() {
     async function downloadDocument(doc: DocumentItem) {
         try {
-            const response = await fetch(`${BASE}/documents/${doc.id}/download`, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token') ?? ''}` },
-            })
-            if (!response.ok) throw new Error('Téléchargement impossible')
-            const blob = await response.blob()
-            const url = URL.createObjectURL(blob)
+            const url = await documentsApi.download(doc.id)
             const link = globalThis.document.createElement('a')
             link.href = url
             link.download = `${doc.title.replaceAll(' ', '-').toLowerCase()}.${doc.format.toLowerCase()}`

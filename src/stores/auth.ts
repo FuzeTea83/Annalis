@@ -17,9 +17,9 @@ export const useAuthStore = defineStore('auth', () => {
         loading.value = true
         error.value = null
         try {
-            const { token, user: profile } = await authApi.login(credentials)
-            localStorage.setItem('token', token)
-            user.value = profile
+            const response = await authApi.login(credentials)
+            localStorage.setItem('token', response.token)
+            user.value = response.user
             await router.push(redirectTo)
         } catch (e) {
             error.value = e instanceof ApiError ? e.message : 'Connexion impossible'
@@ -33,9 +33,9 @@ export const useAuthStore = defineStore('auth', () => {
         loading.value = true
         error.value = null
         try {
-            const { token, user: profile } = await authApi.register(payload)
-            localStorage.setItem('token', token)
-            user.value = profile
+            const response = await authApi.register(payload)
+            localStorage.setItem('token', response.token)
+            user.value = response.user
             await router.push(redirectTo)
         } catch (e) {
             error.value = e instanceof ApiError ? e.message : 'Inscription impossible'

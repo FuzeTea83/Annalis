@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {computed} from 'vue'
-import type {DocumentItem} from '@/types/document'
+import {computed, onMounted} from 'vue'
+import type {DocumentItem, RecentDocumentItem} from '@/types/document'
 import PageTitle from '@/components/PageTitle.vue'
 import DocumentRow from '@/components/layout/DocumentRow.vue'
 import {useAuthStore} from '@/stores/auth'
@@ -10,21 +10,15 @@ import {useDownload} from "@/composables/useDownload.ts";
 import AnnalisButton from "@/components/ui/AnnalisButton.vue";
 import {useI18n} from "vue-i18n";
 
-const props = defineProps<{
-  documents: DocumentItem[]
-}>()
-
-const emit = defineEmits<{
-  navigate: [view: 'explorer' | 'upload']
-  preview: [document: DocumentItem]
-  download: [document: DocumentItem]
-}>()
-
-const { t, d,  } = useI18n()
+const {t, d,} = useI18n()
 const auth = useAuthStore()
 const docsStore = useDocumentsStore()
 const preview = usePreviewStore()
 const {downloadDocument} = useDownload()
+
+onMounted(() => {
+  docsStore.fetchRecent()
+})
 
 const firstName = computed(() => {
   if (auth.user?.firstName) return auth.user.firstName
@@ -32,10 +26,11 @@ const firstName = computed(() => {
 })
 
 const recentDocs = computed(() => {
-  const list = docsStore.items.length ? docsStore.items : props.documents
-  return list.slice(0, 4)
+  return docsStore.items.filter((doc): doc is RecentDocumentItem => 'viewedAt' in doc && doc.viewedAt != null).sort((a, b) => {
+    if (!a.viewedAt || !b.viewedAt) return 0
+    return new Date(b.viewedAt).getTime() - new Date(a.viewedAt).getTime()
+  })
 })
-
 
 const formattedDate = computed(() => {
   const text = d(new Date(), 'short');

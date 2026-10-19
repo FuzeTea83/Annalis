@@ -11,10 +11,10 @@ defineProps<{
 
 const initials = computed(() => {
   if (auth.user?.initials) return auth.user.initials
-  if (auth.user?.name) {
-    return auth.user.name.split(' ').map(n => n[0]?.toUpperCase()).join('').slice(0, 2)
+  if (auth.user?.firstName) {
+    return auth.user.firstName[0]?.toUpperCase() || '' + auth.user.lastName[0]?.toUpperCase() || ''
   }
-  return 'CM'
+  return ''
 })
 </script>
 
