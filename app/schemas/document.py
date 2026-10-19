@@ -12,7 +12,6 @@ class DocumentBase(CamelModel):
     school_year: int = Field(..., ge=2000, le=2100)
     session: Optional[int] = None
     format: str = Field(min_length=1, max_length=100)
-    created_at: datetime.datetime
 
 
 class DocumentCreate(DocumentBase):
@@ -23,7 +22,8 @@ class DocumentResponse(DocumentBase):
     author: str = Field(validation_alias="id_account", serialization_alias="author")
     content_type: str
     size: int = Field(validation_alias="file_size", serialization_alias="size")
-    viewed_at: datetime.datetime | None
+    viewed_at: datetime.datetime | None = None
+    created_at: datetime.datetime
 
 class DocumentQuery(CamelModel):
     page: int = Field(1, ge=1)
