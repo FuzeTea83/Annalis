@@ -5,7 +5,7 @@ import Avatar from "@/components/ui/Avatar.vue";
 import Icon from "@/components/ui/Icon.vue";
 import {computed} from "vue";
 
-const {t} = useI18n()
+const {t, locale} = useI18n()
 
 const props = defineProps<{ document: DocumentItem }>()
 
@@ -42,7 +42,7 @@ const size = computed(() => {
 
 const formatedDate = computed(() => {
   const date = new Date(props.document.createdAt)
-  return date.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short', year: 'numeric'})
+  return date.toLocaleDateString(locale.value, {day: 'numeric', month: 'short', year: 'numeric'})
 })
 
 </script>
@@ -186,4 +186,3 @@ const formatedDate = computed(() => {
 }
 
 </style>
-

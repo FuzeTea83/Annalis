@@ -27,7 +27,18 @@ const french = {
             mostDownloaded: "Les plus téléchargés",
             filterSubject: "Filtrer par matière",
             filterFormat: "Filtrer par format",
-            sort: "Trier les résultats"
+            sort: "Trier les résultats",
+            language: "Langue",
+            account: "Mon compte"
+        },
+        preview: {
+            eyebrow: "APERÇU DU DOCUMENT",
+            close: "Fermer",
+            sharedBy: "partagé par",
+            unavailable: "Aperçu non disponible.",
+            openNewTab: "Ouvrir dans un nouvel onglet",
+            unsupported: "Prévisualisation indisponible pour ce format. Télécharge le fichier pour le consulter.",
+            download: "Télécharger le document"
         },
         auth: {
             promoEyebrow: "LA BIBLIOTHÈQUE DE TA PROMO",

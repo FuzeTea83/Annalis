@@ -2,6 +2,7 @@
 import type {DocumentItem} from '@/types/document'
 import AnnalisButton from "@/components/ui/AnnalisButton.vue";
 import {computed} from "vue";
+import {useI18n} from "vue-i18n";
 
 const props = defineProps<{
   document: DocumentItem,
@@ -13,6 +14,7 @@ const emit = defineEmits<{
   download: [document: DocumentItem]
 }>()
 
+const {t} = useI18n()
 
 const canPreview = computed(() => props.document.format.toUpperCase() === 'PDF')
 
@@ -25,12 +27,12 @@ function onBackdropClick(event: MouseEvent) {
 <template>
   <div class="modal-backdrop" @click="onBackdropClick">
     <article class="preview-modal">
-      <button class="modal-close" type="button" aria-label="Fermer" @click="emit('close')">×</button>
+      <button class="modal-close" type="button" :aria-label="t('preview.close')" @click="emit('close')">×</button>
 
       <span class="file-icon blue">{{ document.format }}</span>
-      <p class="eyebrow">APERÇU DU DOCUMENT</p>
+      <p class="eyebrow">{{ t('preview.eyebrow') }}</p>
       <h2>{{ document.title }}</h2>
-      <p>{{ document.subject }} · {{ document.size }} · partagé par {{ document.author }}</p>
+      <p>{{ document.subject }} · {{ document.size }} · {{ t('preview.sharedBy') }} {{ document.author }}</p>
 
       <object
           v-if="canPreview"
@@ -39,17 +41,17 @@ function onBackdropClick(event: MouseEvent) {
           class="preview-frame"
       >
         <p class="preview-placeholder">
-          Aperçu non disponible.
-          <a :href="url" target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a>
+          {{ t('preview.unavailable') }}
+          <a :href="url" target="_blank" rel="noopener">{{ t('preview.openNewTab') }}</a>
         </p>
       </object>
 
       <p v-else class="preview-placeholder">
-        Prévisualisation indisponible pour ce format. Télécharge le fichier pour le consulter.
+        {{ t('preview.unsupported') }}
       </p>
 
       <AnnalisButton
-          label="Télécharger le document"
+          :label="t('preview.download')"
           variant="primary"
           :icon="{ icon: 'Download', leading: true }"
           @click="emit('download', document)"
@@ -125,4 +127,3 @@ function onBackdropClick(event: MouseEvent) {
 }
 
 </style>
-

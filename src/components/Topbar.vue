@@ -5,7 +5,7 @@ import Avatar from "@/components/ui/Avatar.vue";
 import { useI18n } from 'vue-i18n'
 
 const auth = useAuthStore()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 
 defineProps<{
   title: string
@@ -25,13 +25,13 @@ const initials = computed(() => {
     <strong>{{ title }}</strong>
     <div class="topbar-actions">
       <label class="language-select">
-        <span class="sr-only">Language</span>
-        <select v-model="locale" aria-label="Language">
+        <span class="sr-only">{{ t('label.language') }}</span>
+        <select v-model="locale" :aria-label="t('label.language')">
           <option value="fr-FR">FR</option>
           <option value="en-US">EN</option>
         </select>
       </label>
-      <router-link to="/account" class="avatar-button" aria-label="Mon compte">
+      <router-link to="/account" class="avatar-button" :aria-label="t('label.account')">
         <Avatar :user-initials="initials" />
       </router-link>
     </div>

@@ -30,8 +30,8 @@ async function submit() {
 <template>
   <div class="auth-page">
     <label class="language-select">
-      <span class="sr-only">Language</span>
-      <select v-model="locale" aria-label="Language">
+      <span class="sr-only">{{ t('label.language') }}</span>
+      <select v-model="locale" :aria-label="t('label.language')">
         <option value="fr-FR">FR</option>
         <option value="en-US">EN</option>
       </select>

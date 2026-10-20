@@ -27,7 +27,18 @@ const english = {
             mostDownloaded: "Most downloaded",
             filterSubject: "Filter by subject",
             filterFormat: "Filter by format",
-            sort: "Sort results"
+            sort: "Sort results",
+            language: "Language",
+            account: "My account"
+        },
+        preview: {
+            eyebrow: "DOCUMENT PREVIEW",
+            close: "Close",
+            sharedBy: "shared by",
+            unavailable: "Preview unavailable.",
+            openNewTab: "Open in a new tab",
+            unsupported: "Preview is unavailable for this format. Download the file to view it.",
+            download: "Download document"
         },
         auth: {
             promoEyebrow: "YOUR CLASS LIBRARY",
