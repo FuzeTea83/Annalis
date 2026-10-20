@@ -1,0 +1,55 @@
+services:
+  db:
+    image: mariadb:11
+    container_name: annalis-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ../data/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    expose:
+      - "3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [app-network]
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/app.Dockerfile
+    container_name: annalis-app
+    restart: unless-stopped
+    env_file: [ .env.exemple ]
+    environment:
+      PYTHONPATH: /app:/app/app
+    command: >
+      sh -c "uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    expose:
+      - "8000"
+    networks: [app-network]
+
+  proxy:
+    build:
+      context: ..
+      dockerfile: docker/proxy.Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    container_name: annalis-proxy
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "8080:80"
+    networks: [app-network]
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge

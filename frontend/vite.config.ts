@@ -9,10 +9,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
-      vue(),
-      vueDevTools({
-        launchEditor: 'webstorm',
-      }),
+      vue()
     ],
     resolve: {
       alias: {
