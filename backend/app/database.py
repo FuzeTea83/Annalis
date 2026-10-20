@@ -8,7 +8,7 @@ engine = create_engine(
     pool_pre_ping=True,   # Vérifie que la connexion est vivante avant de l'utiliser
     pool_recycle=3600,    # Recrée les connexions toutes les heures
     pool_size=10,
-    max_overflow=20,
+    max_overflow=200,
     echo=False,           # Mettre True en dev pour voir les requêtes SQL
 )
 
