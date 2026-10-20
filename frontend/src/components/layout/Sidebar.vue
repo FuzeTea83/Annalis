@@ -76,7 +76,7 @@ async function handleLogout() {
   padding-top: 54px
 }
 
-.nav-caption, .eyebrow {
+.nav-caption {
   margin: 0;
   color: #9db4ab;
   font-size: 10px;
