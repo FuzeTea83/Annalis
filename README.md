@@ -63,9 +63,7 @@ This command will:
 3.  Start the **Frontend** (Nginx + Vue.js app).
 
 The application will be available at:
-*   **Frontend**: `http://localhost:3000`
-*   **Backend API**: `http://localhost:8000`
-*   **API Documentation (Swagger)**: `http://localhost:8000/docs`
+*   **Frontend**: `http://localhost:8080`
 
 #### Local Development (Without Docker)
 
