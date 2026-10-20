@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `documents` (
     `title`               VARCHAR(255)          NOT NULL,
     `description`         TEXT                  NULL,
     `file_path`           VARCHAR(500)          NOT NULL,
-    `content_type`       VARCHAR(100)          NOT NULL,
+    `content_type`        VARCHAR(100)          NOT NULL,
     `format`              VARCHAR(100)          NOT NULL,
     `file_size`           INT                   NOT NULL,
     `created_at`          DATETIME              NOT NULL DEFAULT CURRENT_TIMESTAMP,

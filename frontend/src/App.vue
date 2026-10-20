@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import DocumentPreviewModal from '@/components/DocumentPreviewModal.vue'
+import DocumentPreviewModal from '@/components/layout/DocumentPreviewModal.vue'
 import Sidebar from '@/components/layout/Sidebar.vue'
-import Topbar from '@/components/Topbar.vue'
+import Topbar from '@/components/ui/Topbar.vue'
 import type {NavItem} from './types/views'
 import {useRoute} from 'vue-router'
 import {usePreviewStore} from "@/stores/preview.ts";

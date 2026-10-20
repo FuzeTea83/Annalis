@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { NavItem, View } from '@/types/views'
+import type { NavItem } from '@/types/views'
 import { useI18n } from "vue-i18n"
 import { useRoute } from 'vue-router'
 import Brand from "@/components/ui/Brand.vue"
@@ -14,10 +14,6 @@ const auth = useAuthStore()
 
 defineProps<{
   navItems: NavItem[]
-}>()
-
-const emit = defineEmits<{
-  navigate: [view: View]
 }>()
 
 const userName = computed(() => `${auth.user?.firstName} ${auth.user?.lastName}`)

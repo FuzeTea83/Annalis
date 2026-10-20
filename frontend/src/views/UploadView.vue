@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, ref} from 'vue'
-import PageTitle from '@/components/PageTitle.vue'
+import PageTitle from '@/components/ui/PageTitle.vue'
 import {useDocumentsStore} from '@/stores/documents'
 import {documentsApi} from '@/api/documents'
 import AnnalisButton from "@/components/ui/AnnalisButton.vue";

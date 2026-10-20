@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth.ts'
 import Avatar from "@/components/ui/Avatar.vue";
 import { useI18n } from 'vue-i18n'
 

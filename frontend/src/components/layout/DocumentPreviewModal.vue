@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {DocumentItem} from '@/types/document'
+import type {DocumentItem} from '@/types/document.ts'
 import AnnalisButton from "@/components/ui/AnnalisButton.vue";
 import {computed} from "vue";
 import {useI18n} from "vue-i18n";

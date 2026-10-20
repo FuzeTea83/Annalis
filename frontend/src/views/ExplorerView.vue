@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue'
-import PageTitle from '@/components/PageTitle.vue'
+import PageTitle from '@/components/ui/PageTitle.vue'
 import DocumentRow from '@/components/layout/DocumentRow.vue'
 import {useFiltersStore} from '@/stores/filters'
 import {useDocumentsStore} from '@/stores/documents'

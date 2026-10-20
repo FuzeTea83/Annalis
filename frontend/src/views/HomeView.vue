@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, onMounted} from 'vue'
-import PageTitle from '@/components/PageTitle.vue'
+import PageTitle from '@/components/ui/PageTitle.vue'
 import DocumentRow from '@/components/layout/DocumentRow.vue'
 import {useAuthStore} from '@/stores/auth'
 import {useDocumentsStore} from '@/stores/documents'
@@ -9,7 +9,7 @@ import {useDownload} from "@/composables/useDownload.ts";
 import AnnalisButton from "@/components/ui/AnnalisButton.vue";
 import {useI18n} from "vue-i18n";
 
-const {t, d,} = useI18n()
+const {t, d} = useI18n()
 const auth = useAuthStore()
 const docsStore = useDocumentsStore()
 const preview = usePreviewStore()

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import PageTitle from '../components/PageTitle.vue'
+import PageTitle from '@/components/ui/PageTitle.vue'
 import { useAuthStore } from '@/stores/auth'
 import Avatar from "@/components/ui/Avatar.vue";
 import { useI18n } from 'vue-i18n'
