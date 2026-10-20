@@ -7,7 +7,7 @@ import { useI18n } from "vue-i18n"
 
 const auth = useAuthStore()
 const route = useRoute()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const form = reactive({ email: '', password: '' })
 const fieldErrors = reactive<Record<string, string[]>>({})
@@ -29,6 +29,13 @@ async function submit() {
 
 <template>
   <div class="auth-page">
+    <label class="language-select">
+      <span class="sr-only">Language</span>
+      <select v-model="locale" aria-label="Language">
+        <option value="fr-FR">FR</option>
+        <option value="en-US">EN</option>
+      </select>
+    </label>
     <div class="auth-promo">
       <div class="promo-brand">
         <span class="promo-logo" aria-hidden="true">
@@ -109,10 +116,39 @@ async function submit() {
 
 <style scoped>
 .auth-page {
+  position: relative;
   display: grid;
   grid-template-columns: 48% 52%;
   min-height: 100vh;
   background: #fff;
+}
+
+.language-select {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  z-index: 1;
+}
+
+.language-select select {
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  background: #fff;
+  font-size: 11px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .auth-promo {
