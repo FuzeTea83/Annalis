@@ -17,6 +17,11 @@ services:
       timeout: 5s
       retries: 5
     networks: [app-network]
+    deploy:
+        resources:
+            limits:
+              memory: 2048M
+              cpus: "2.0"
 
   app:
     build:
@@ -32,6 +37,11 @@ services:
     expose:
       - "8000"
     networks: [app-network]
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+          cpus: "2.0"
 
   proxy:
     build:
@@ -46,6 +56,11 @@ services:
     ports:
       - "8080:80"
     networks: [app-network]
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+          cpus: "2.0"
 
 volumes:
   db_data:
