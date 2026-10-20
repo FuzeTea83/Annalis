@@ -4,8 +4,10 @@ import PageTitle from '@/components/PageTitle.vue'
 import {useDocumentsStore} from '@/stores/documents'
 import {documentsApi} from '@/api/documents'
 import AnnalisButton from "@/components/ui/AnnalisButton.vue";
+import { useI18n } from 'vue-i18n'
 
 const docsStore = useDocumentsStore()
+const { t } = useI18n()
 
 const selectedFile = ref<File | null>(null)
 const title = ref('')
@@ -54,12 +56,12 @@ function formatFileSize(bytes: number): string {
 async function submitForm() {
   if (!selectedFile.value) {
     isSuccess.value = false
-    message.value = 'Sélectionne un fichier (PDF, DOCX ou PPTX) pour continuer.'
+    message.value = t('upload.noFile')
     return
   }
   if (!title.value.trim() || !subject.value) {
     isSuccess.value = false
-    message.value = 'Renseigne un titre et choisis une matière.'
+    message.value = t('upload.missingFields')
     return
   }
 
@@ -77,7 +79,7 @@ async function submitForm() {
     const newDocument = await documentsApi.upload(formData)
     docsStore.addDocument(newDocument)
     isSuccess.value = true
-    message.value = 'Ton document a été transmis avec succès et ajouté à la bibliothèque.'
+    message.value = t('upload.success')
     selectedFile.value = null
     title.value = ''
     subject.value = ''
@@ -88,24 +90,24 @@ async function submitForm() {
     description.value = ''
   } catch (error) {
     isSuccess.value = false
-    message.value = error instanceof Error ? error.message : 'L’envoi du document a échoué.'
+    message.value = error instanceof Error ? error.message : t('upload.failure')
   }
 }
 </script>
 
 <template>
   <PageTitle
-    eyebrow="CONTRIBUER"
-    title="Déposer un document"
-    subtitle="Partage une ressource utile avec ta communauté étudiante."
+    :eyebrow="t('upload.eyebrow')"
+    :title="t('upload.title')"
+    :subtitle="t('upload.subtitle')"
   />
 
   <form class="upload-card" @submit.prevent="submitForm">
     <div class="form-step">
       <span class="step-number">1</span>
       <div class="step-content">
-        <h2>Ton fichier</h2>
-        <p>Formats acceptés : PDF, DOCX ou PPTX · 20 Mo maximum</p>
+        <h2>{{ t('upload.file') }}</h2>
+        <p>{{ t('upload.formats') }}</p>
 
         <label
           class="drop-zone"
@@ -124,8 +126,8 @@ async function submitForm() {
               <line x1="12" y1="3" x2="12" y2="15"/>
             </svg>
           </span>
-          <strong>{{ selectedFile ? selectedFile.name : 'Glisse ton fichier ici' }}</strong>
-          <small>{{ selectedFile ? formatFileSize(selectedFile.size) : 'ou clique pour le parcourir' }}</small>
+          <strong>{{ selectedFile ? selectedFile.name : t('upload.drop') }}</strong>
+          <small>{{ selectedFile ? formatFileSize(selectedFile.size) : t('upload.browse') }}</small>
         </label>
       </div>
     </div>
@@ -135,21 +137,21 @@ async function submitForm() {
     <div class="form-step">
       <span class="step-number">2</span>
       <div class="step-content">
-        <h2>Informations du document</h2>
+        <h2>{{ t('upload.info') }}</h2>
         <div class="form-grid">
           <label class="form-label full">
-            Titre du document
+            {{ t('upload.documentTitle') }}
             <input
               v-model="title"
-              placeholder="Ex. Fiche de révision — Algorithmes de tri"
+              :placeholder="t('upload.titlePlaceholder')"
               required
             />
           </label>
 
           <label class="form-label">
-            Matière
+            {{ t('upload.subject') }}
             <select v-model="subject" required>
-              <option value="" disabled>Choisir une matière</option>
+              <option value="" disabled>{{ t('upload.chooseSubject') }}</option>
               <option>Algorithmique</option>
               <option>Mathématiques</option>
               <option>Informatique</option>
@@ -159,9 +161,9 @@ async function submitForm() {
           </label>
 
           <label class="form-label">
-            Section
+            {{ t('upload.section') }}
             <select v-model="sector">
-              <option value="" disabled>Choisir une section</option>
+              <option value="" disabled>{{ t('upload.chooseSection') }}</option>
               <option>Informatique</option>
               <option>Matériaux</option>
               <option>Peip</option>
@@ -169,7 +171,7 @@ async function submitForm() {
           </label>
 
           <label class="form-label">
-            Niveau
+            {{ t('upload.level') }}
             <select v-model="sector_year">
               <option>Licence 1</option>
               <option>Licence 2</option>
@@ -180,18 +182,18 @@ async function submitForm() {
           </label>
 
           <label class="form-label">
-            Année scolaire
+            {{ t('upload.schoolYear') }}
             <select v-model="school_year">
-              <option value="" disabled>Choisir une année scolaire</option>
+              <option value="" disabled>{{ t('upload.chooseSchoolYear') }}</option>
               <option v-for="year in schoolYears" :key="year">{{ year }}</option>
             </select>
           </label>
 
           <label class="form-label full">
-            Description <span>(facultatif)</span>
+            {{ t('upload.description') }} <span>{{ t('upload.optional') }}</span>
             <textarea
               v-model="description"
-              placeholder="Ajoute quelques mots pour aider les étudiants à comprendre le contenu..."
+              :placeholder="t('upload.descriptionPlaceholder')"
               rows="3"
             ></textarea>
           </label>
@@ -206,10 +208,10 @@ async function submitForm() {
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           <path d="m9 12 2 2 4-4"/>
         </svg>
-        Ton document sera vérifié avant sa publication.
+        {{ t('upload.verification') }}
       </span>
 
-      <AnnalisButton label="Envoyer pour validation" variant="primary" :icon="{icon: 'Arrow', leading: true}"/>
+      <AnnalisButton :label="t('upload.submit')" variant="primary" :icon="{icon: 'Arrow', leading: true}"/>
     </div>
 
     <p v-if="message" class="form-message" :class="{ 'message-success': isSuccess, 'message-error': !isSuccess }">

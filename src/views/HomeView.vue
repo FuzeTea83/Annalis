@@ -46,8 +46,8 @@ const formattedDate = computed(() => {
     <div class="home-topbar-row">
       <PageTitle
           :eyebrow="formattedDate"
-          :title="`Bonjour ${firstName},`"
-          subtitle="Prête à avancer dans tes cours aujourd'hui ?"
+          :title="t('home.greeting', { name: firstName })"
+          :subtitle="t('home.subtitle')"
       />
       <router-link to="/upload">
         <AnnalisButton :label="t('home.upload_document')" variant="primary" :icon="{ icon: 'Upload', leading: true }"/>
@@ -57,10 +57,10 @@ const formattedDate = computed(() => {
     <section class="recent-documents-panel">
       <div class="panel-header">
         <div>
-          <p class="eyebrow">REPRENDRE</p>
-          <h2 class="panel-title">Consultés récemment</h2>
+          <p class="eyebrow">{{ t('home.eyebrow') }}</p>
+          <h2 class="panel-title">{{ t('home.recent') }}</h2>
         </div>
-        <router-link to="/explorer" class="text-link">Tout voir <span>→</span></router-link>
+        <router-link to="/explorer" class="text-link">{{ t('home.seeAll') }} <span>→</span></router-link>
       </div>
 
       <div class="recent-documents-list">
@@ -117,4 +117,3 @@ const formattedDate = computed(() => {
   flex-direction: column;
 }
 </style>
-

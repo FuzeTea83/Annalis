@@ -3,8 +3,10 @@ import { computed, reactive, ref } from 'vue'
 import PageTitle from '../components/PageTitle.vue'
 import { useAuthStore } from '@/stores/auth'
 import Avatar from "@/components/ui/Avatar.vue";
+import { useI18n } from 'vue-i18n'
 
 const auth = useAuthStore()
+const { t } = useI18n()
 
 const activeTab = ref<'info' | 'notifications' | 'privacy'>('info')
 const message = ref('')
@@ -30,7 +32,7 @@ function saveProfile() {
     auth.user.email = form.email
     auth.user.initials = initials.value
   }
-  message.value = 'Tes informations ont bien été enregistrées.'
+  message.value = t('account.saved')
   setTimeout(() => {
     message.value = ''
   }, 4000)
@@ -39,9 +41,9 @@ function saveProfile() {
 
 <template>
   <PageTitle
-    eyebrow="MON ESPACE"
-    title="Compte & paramètres"
-    subtitle="Gère tes informations et tes préférences."
+    :eyebrow="t('account.eyebrow')"
+    :title="t('account.title')"
+    :subtitle="t('account.subtitle')"
   />
 
   <div class="account-card account-summary">
@@ -51,7 +53,7 @@ function saveProfile() {
       <p>{{ form.email }}</p>
     </div>
     <button class="notely-button secondary change-photo-btn" type="button">
-      Changer la photo
+      {{ t('account.changePhoto') }}
     </button>
   </div>
 
@@ -66,7 +68,7 @@ function saveProfile() {
           <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
           <circle cx="12" cy="7" r="4"/>
         </svg>
-        <span>Informations</span>
+        <span>{{ t('account.information') }}</span>
       </button>
 
       <button
@@ -78,7 +80,7 @@ function saveProfile() {
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
           <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
         </svg>
-        <span>Notifications</span>
+        <span>{{ t('account.notifications') }}</span>
       </button>
 
       <button
@@ -89,28 +91,28 @@ function saveProfile() {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         </svg>
-        <span>Confidentialité</span>
+        <span>{{ t('account.privacy') }}</span>
       </button>
     </aside>
 
     <form class="account-card account-form" @submit.prevent="saveProfile">
       <template v-if="activeTab === 'info'">
-        <h2>Informations personnelles</h2>
-        <p>Mets à jour les informations visibles sur ton profil.</p>
+        <h2>{{ t('account.personalInfo') }}</h2>
+        <p>{{ t('account.personalSubtitle') }}</p>
 
         <div class="form-grid">
           <label class="form-label">
-            Prénom
+            {{ t('auth.firstName') }}
             <input v-model="form.firstName" required />
           </label>
 
           <label class="form-label">
-            Nom
+            {{ t('auth.lastName') }}
             <input v-model="form.lastName" required />
           </label>
 
           <label class="form-label full">
-            Adresse e-mail
+            {{ t('auth.email') }}
             <input v-model="form.email" type="email" required />
           </label>
 
@@ -118,7 +120,7 @@ function saveProfile() {
 
         <div class="form-submit">
           <button class="notely-button primary" type="submit">
-            Enregistrer
+            {{ t('account.save') }}
           </button>
           <span v-if="message" class="form-message save-success">
             {{ message }}
@@ -127,46 +129,46 @@ function saveProfile() {
       </template>
 
       <template v-else-if="activeTab === 'notifications'">
-        <h2>Préférences de notification</h2>
-        <p>Gère la manière dont Annalis t'informe des nouveaux cours et téléchargements.</p>
+        <h2>{{ t('account.notificationPreferences') }}</h2>
+        <p>{{ t('account.notificationSubtitle') }}</p>
         <div class="notification-options">
           <label class="pref-checkbox">
             <input type="checkbox" checked />
-            <span>Nouveaux documents disponibles dans ma filière</span>
+            <span>{{ t('account.newDocuments') }}</span>
           </label>
           <label class="pref-checkbox">
             <input type="checkbox" checked />
-            <span>Validation de mes contributions</span>
+            <span>{{ t('account.contributionValidation') }}</span>
           </label>
           <label class="pref-checkbox">
             <input type="checkbox" />
-            <span>Rappels de révision hebdomadaires</span>
+            <span>{{ t('account.reminders') }}</span>
           </label>
         </div>
         <div class="form-submit">
           <button class="notely-button primary" type="button" @click="saveProfile">
-            Enregistrer
+            {{ t('account.save') }}
           </button>
           <span v-if="message" class="form-message save-success">{{ message }}</span>
         </div>
       </template>
 
       <template v-else>
-        <h2>Confidentialité et données</h2>
-        <p>Contrôle les informations partagées avec la communauté étudiante.</p>
+        <h2>{{ t('account.privacyData') }}</h2>
+        <p>{{ t('account.privacySubtitle') }}</p>
         <div class="notification-options">
           <label class="pref-checkbox">
             <input type="checkbox" checked />
-            <span>Afficher mon nom complet sur mes documents partagés</span>
+            <span>{{ t('account.showName') }}</span>
           </label>
           <label class="pref-checkbox">
             <input type="checkbox" checked />
-            <span>Autoriser les autres étudiants à voir mon niveau d'études</span>
+            <span>{{ t('account.showLevel') }}</span>
           </label>
         </div>
         <div class="form-submit">
           <button class="notely-button primary" type="button" @click="saveProfile">
-            Enregistrer
+            {{ t('account.save') }}
           </button>
           <span v-if="message" class="form-message save-success">{{ message }}</span>
         </div>
@@ -225,4 +227,3 @@ function saveProfile() {
   font-weight: 600;
 }
 </style>
-

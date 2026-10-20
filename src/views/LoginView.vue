@@ -3,9 +3,11 @@ import { reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { ApiError } from "@/api/http"
+import { useI18n } from "vue-i18n"
 
 const auth = useAuthStore()
 const route = useRoute()
+const { t } = useI18n()
 
 const form = reactive({ email: '', password: '' })
 const fieldErrors = reactive<Record<string, string[]>>({})
@@ -39,11 +41,9 @@ async function submit() {
       </div>
 
       <div class="promo-center">
-        <p class="promo-eyebrow">LA BIBLIOTHÈQUE DE TA PROMO</p>
-        <h1 class="promo-title">Apprendre mieux,<br />ensemble.</h1>
-        <p class="promo-text">
-          Retrouve les meilleures ressources de cours, partagées et vérifiées par ta communauté étudiante.
-        </p>
+        <p class="promo-eyebrow">{{ t('auth.promoEyebrow') }}</p>
+        <h1 class="promo-title">{{ t('auth.promoTitle') }}</h1>
+        <p class="promo-text">{{ t('auth.promoText') }}</p>
       </div>
 
       <div class="promo-footer">
@@ -53,54 +53,54 @@ async function submit() {
           <span class="avatar-bubble avatar-more">+2k</span>
         </div>
         <div class="social-proof-copy">
-          <strong>2 400+ étudiants</strong>
-          <span>partagent déjà leurs notes</span>
+          <strong>{{ t('auth.students') }}</strong>
+          <span>{{ t('auth.sharedNotes') }}</span>
         </div>
       </div>
     </div>
 
     <div class="auth-form-side">
       <div class="auth-card">
-        <p class="auth-eyebrow">BIENVENUE SUR ANNALIS</p>
-        <h2 class="auth-title">Rejoins ta communauté.</h2>
-        <p class="auth-subtitle">Connecte-toi à ton compte étudiant.</p>
+        <p class="auth-eyebrow">{{ t('auth.welcome') }}</p>
+        <h2 class="auth-title">{{ t('auth.loginTitle') }}</h2>
+        <p class="auth-subtitle">{{ t('auth.loginSubtitle') }}</p>
 
         <p v-if="auth.error" class="alert-error">{{ auth.error }}</p>
 
         <form @submit.prevent="submit" class="auth-form">
           <label class="auth-field">
-            <span>Adresse e-mail</span>
+            <span>{{ t('auth.email') }}</span>
             <input
               v-model="form.email"
               type="email"
               autocomplete="email"
-              placeholder="prenom.nom@universite.fr"
+              :placeholder="t('auth.emailPlaceholder')"
               required
             />
             <small v-for="msg in fieldErrors.email" :key="msg" class="field-error">{{ msg }}</small>
           </label>
 
           <label class="auth-field">
-            <span>Mot de passe</span>
+            <span>{{ t('auth.password') }}</span>
             <input
               v-model="form.password"
               type="password"
               autocomplete="current-password"
-              placeholder="8 caractères minimum"
+              :placeholder="t('auth.passwordPlaceholder')"
               required
             />
             <small v-for="msg in fieldErrors.password" :key="msg" class="field-error">{{ msg }}</small>
           </label>
 
           <button type="submit" class="auth-submit-btn" :disabled="auth.loading">
-            <span>{{ auth.loading ? 'Connexion…' : 'Se connecter' }}</span>
+            <span>{{ auth.loading ? t('auth.loggingIn') : t('auth.login') }}</span>
             <span class="arrow-icon">→</span>
           </button>
         </form>
 
         <div class="auth-switch">
-          <span>Nouveau compte ? </span>
-          <router-link to="/sign-up" class="auth-link">S'inscrire</router-link>
+          <span>{{ t('auth.newAccount') }} </span>
+          <router-link to="/sign-up" class="auth-link">{{ t('auth.register') }}</router-link>
         </div>
       </div>
     </div>

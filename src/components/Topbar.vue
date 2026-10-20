@@ -2,8 +2,10 @@
 import { computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import Avatar from "@/components/ui/Avatar.vue";
+import { useI18n } from 'vue-i18n'
 
 const auth = useAuthStore()
+const { locale } = useI18n()
 
 defineProps<{
   title: string
@@ -22,6 +24,13 @@ const initials = computed(() => {
   <header class="topbar">
     <strong>{{ title }}</strong>
     <div class="topbar-actions">
+      <label class="language-select">
+        <span class="sr-only">Language</span>
+        <select v-model="locale" aria-label="Language">
+          <option value="fr-FR">FR</option>
+          <option value="en-US">EN</option>
+        </select>
+      </label>
       <router-link to="/account" class="avatar-button" aria-label="Mon compte">
         <Avatar :user-initials="initials" />
       </router-link>
@@ -55,6 +64,27 @@ const initials = computed(() => {
 
 .avatar-button {
   border: 0
+}
+
+.language-select select {
+  padding: 5px 7px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  background: #fff;
+  font-size: 11px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 @media (max-width: 1000px) {

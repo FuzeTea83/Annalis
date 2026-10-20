@@ -7,18 +7,28 @@ import type {NavItem} from './types/views'
 import {useRoute} from 'vue-router'
 import {usePreviewStore} from "@/stores/preview.ts";
 import {useDownload} from '@/composables/useDownload'
+import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
 const preview = usePreviewStore()
 const {downloadDocument} = useDownload()
+const { t } = useI18n()
 
-const navItems: NavItem[] = [
-  {id: 'overview', label: 'Vue d’ensemble', icon: 'House'},
-  {id: 'explorer', label: 'Explorer', icon: 'Book'},
-  {id: 'upload', label: 'Déposer un document', icon: 'Upload'},
-]
+const navItems = computed<NavItem[]>(() => [
+  {id: 'overview', label: t('sidebar.overview'), icon: 'House'},
+  {id: 'explorer', label: t('sidebar.explorer'), icon: 'Book'},
+  {id: 'upload', label: t('sidebar.upload'), icon: 'Upload'},
+])
 
-const currentTitle = computed(() => (route.meta.title as string) ?? 'Annalis')
+const currentTitle = computed(() => {
+  const titles: Record<string, string> = {
+    overview: t('home.recent'),
+    explorer: t('explorer.title'),
+    upload: t('upload.title'),
+    account: t('account.title'),
+  }
+  return titles[String(route.name)] ?? 'Annalis'
+})
 const isAuthPage = computed(() => route.meta.hideNavigation || route.name === 'login' || route.name === 'sign-up')
 </script>
 

@@ -3,9 +3,11 @@ import { reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { ApiError } from "@/api/http"
+import { useI18n } from "vue-i18n"
 
 const auth = useAuthStore()
 const route = useRoute()
+const { t } = useI18n()
 
 const form = reactive({ firstName: '', lastName: '', email: '', password: '' })
 const fieldErrors = reactive<Record<string, string[]>>({})
@@ -39,11 +41,9 @@ async function submit() {
       </div>
 
       <div class="promo-center">
-        <p class="promo-eyebrow">LA BIBLIOTHÈQUE DE TA PROMO</p>
-        <h1 class="promo-title">Apprendre mieux,<br />ensemble.</h1>
-        <p class="promo-text">
-          Retrouve les meilleures ressources de cours, partagées et vérifiées par ta communauté étudiante.
-        </p>
+        <p class="promo-eyebrow">{{ t('auth.promoEyebrow') }}</p>
+        <h1 class="promo-title">{{ t('auth.promoTitle') }}</h1>
+        <p class="promo-text">{{ t('auth.promoText') }}</p>
       </div>
 
       <div class="promo-footer">
@@ -53,41 +53,41 @@ async function submit() {
           <span class="avatar-bubble avatar-more">+2k</span>
         </div>
         <div class="social-proof-copy">
-          <strong>2 400+ étudiants</strong>
-          <span>partagent déjà leurs notes</span>
+          <strong>{{ t('auth.students') }}</strong>
+          <span>{{ t('auth.sharedNotes') }}</span>
         </div>
       </div>
     </div>
 
     <div class="auth-form-side">
       <div class="auth-card">
-        <p class="auth-eyebrow">BIENVENUE SUR ANNALIS</p>
-        <h2 class="auth-title">Rejoins ta communauté.</h2>
-        <p class="auth-subtitle">Crée ton compte étudiant en quelques secondes.</p>
+        <p class="auth-eyebrow">{{ t('auth.welcome') }}</p>
+        <h2 class="auth-title">{{ t('auth.signupTitle') }}</h2>
+        <p class="auth-subtitle">{{ t('auth.signupSubtitle') }}</p>
 
         <p v-if="auth.error" class="alert-error">{{ auth.error }}</p>
 
         <form @submit.prevent="submit" class="auth-form">
           <div class="auth-form-name-grid">
             <label class="auth-field">
-              <span>Prénom</span>
+              <span>{{ t('auth.firstName') }}</span>
               <input
                   v-model="form.firstName"
                   type="text"
                   autocomplete="name"
-                  placeholder="Camille"
+                  :placeholder="t('auth.firstNamePlaceholder')"
                   required
               />
               <small v-for="msg in fieldErrors.firstName" :key="msg" class="field-error">{{ msg }}</small>
             </label>
 
             <label class="auth-field">
-              <span>Nom</span>
+              <span>{{ t('auth.lastName') }}</span>
               <input
                   v-model="form.lastName"
                   type="text"
                   autocomplete="name"
-                  placeholder="Dupont"
+                  :placeholder="t('auth.lastNamePlaceholder')"
                   required
               />
               <small v-for="msg in fieldErrors.lastName" :key="msg" class="field-error">{{ msg }}</small>
@@ -96,38 +96,38 @@ async function submit() {
 
 
           <label class="auth-field">
-            <span>Adresse e-mail</span>
+            <span>{{ t('auth.email') }}</span>
             <input
               v-model="form.email"
               type="email"
               autocomplete="email"
-              placeholder="prenom.nom@universite.fr"
+              :placeholder="t('auth.emailPlaceholder')"
               required
             />
             <small v-for="msg in fieldErrors.email" :key="msg" class="field-error">{{ msg }}</small>
           </label>
 
           <label class="auth-field">
-            <span>Mot de passe</span>
+            <span>{{ t('auth.password') }}</span>
             <input
               v-model="form.password"
               type="password"
               autocomplete="new-password"
-              placeholder="8 caractères minimum"
+              :placeholder="t('auth.passwordPlaceholder')"
               required
             />
             <small v-for="msg in fieldErrors.password" :key="msg" class="field-error">{{ msg }}</small>
           </label>
 
           <button type="submit" class="auth-submit-btn" :disabled="auth.loading">
-            <span>{{ auth.loading ? 'Création du compte…' : 'Créer mon compte' }}</span>
+            <span>{{ auth.loading ? t('auth.signingUp') : t('auth.signup') }}</span>
             <span class="arrow-icon">→</span>
           </button>
         </form>
 
         <div class="auth-switch">
-          <span>Déjà inscrit·e ? </span>
-          <router-link to="/login" class="auth-link">Se connecter</router-link>
+          <span>{{ t('auth.existingAccount') }} </span>
+          <router-link to="/login" class="auth-link">{{ t('auth.login') }}</router-link>
         </div>
       </div>
     </div>

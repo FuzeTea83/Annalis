@@ -7,11 +7,13 @@ import {useDocumentsStore} from '@/stores/documents'
 import {usePreviewStore} from '@/stores/preview'
 import {useDownload} from '@/composables/useDownload'
 import Icon from "@/components/ui/Icon.vue";
+import { useI18n } from 'vue-i18n'
 
 const filters = useFiltersStore()
 const docs = useDocumentsStore()
 const preview = usePreviewStore()
 const { downloadDocument } = useDownload()
+const { t } = useI18n()
 
 const sortBy = ref('recent')
 
@@ -24,8 +26,8 @@ const filteredDocuments = computed(() => {
 
   return docs.items.filter((item) => {
     const matchesQuery = !query || `${item.title} ${item.subject} ${item.author}`.toLowerCase().includes(query)
-    const matchesSubject = filters.subjectFilter === 'Toutes les matières' || item.subject === filters.subjectFilter
-    const matchesFormat = filters.formatFilter === 'Tous les formats' || item.format.toUpperCase() === filters.formatFilter.toUpperCase()
+    const matchesSubject = filters.subjectFilter === 'all' || item.subject === filters.subjectFilter
+    const matchesFormat = filters.formatFilter === 'all' || item.format.toUpperCase() === filters.formatFilter.toUpperCase()
     return matchesQuery && matchesSubject && matchesFormat
   })
 })
@@ -33,9 +35,9 @@ const filteredDocuments = computed(() => {
 
 <template>
   <PageTitle
-      eyebrow="BIBLIOTHÈQUE PARTAGÉE"
-      title="Explorer les documents"
-      :subtitle="`Trouve la ressource qu'il te faut parmi ${docs.total} documents vérifiés.`"
+      :eyebrow="t('explorer.eyebrow')"
+      :title="t('explorer.title')"
+      :subtitle="t('explorer.subtitle', { count: docs.total })"
   />
 
   <p v-if="docs.error" class="error-state">{{ docs.error }}</p>
@@ -43,11 +45,11 @@ const filteredDocuments = computed(() => {
   <div class="filters">
     <label class="search-field">
       <Icon icon="Search" :size="21" />
-      <input v-model="filters.search" type="search" placeholder="Rechercher un cours, un sujet, un auteur..." />
+      <input v-model="filters.search" type="search" :placeholder="t('label.searchPlaceholder')" />
     </label>
 
-    <select v-model="filters.subjectFilter" aria-label="Filtrer par matière">
-      <option>Toutes les matières</option>
+    <select v-model="filters.subjectFilter" :aria-label="t('label.filterSubject')">
+      <option value="all">{{ t('label.allSubjects') }}</option>
       <option>Algorithmique</option>
       <option>Mathématiques</option>
       <option>Informatique</option>
@@ -55,8 +57,8 @@ const filteredDocuments = computed(() => {
       <option>Droit</option>
     </select>
 
-    <select v-model="filters.formatFilter" aria-label="Filtrer par format">
-      <option>Tous les formats</option>
+    <select v-model="filters.formatFilter" :aria-label="t('label.filterFormat')">
+      <option value="all">{{ t('label.allFormats') }}</option>
       <option>PDF</option>
       <option>DOCX</option>
       <option>PPTX</option>
@@ -65,10 +67,10 @@ const filteredDocuments = computed(() => {
 
   <div class="results-card">
     <div class="results-header">
-      <span>{{ filteredDocuments.length }} {{ filteredDocuments.length > 1 ? 'documents trouvés' : 'document trouvé' }}</span>
-      <select v-model="sortBy" aria-label="Trier les résultats">
-        <option value="recent">Les plus récents</option>
-        <option value="downloads">Les plus téléchargés</option>
+      <span>{{ filteredDocuments.length }} {{ filteredDocuments.length > 1 ? t('explorer.foundMany') : t('explorer.foundOne') }}</span>
+      <select v-model="sortBy" :aria-label="t('label.sort')">
+        <option value="recent">{{ t('explorer.recent') }}</option>
+        <option value="downloads">{{ t('explorer.downloads') }}</option>
       </select>
     </div>
 
@@ -80,8 +82,8 @@ const filteredDocuments = computed(() => {
         @download="downloadDocument"
     />
 
-    <p v-if="docs.loading" class="empty-state">Chargement des documents…</p>
-    <p v-else-if="!filteredDocuments.length" class="empty-state">Aucun document ne correspond à ta recherche.</p>
+    <p v-if="docs.loading" class="empty-state">{{ t('explorer.loading') }}</p>
+    <p v-else-if="!filteredDocuments.length" class="empty-state">{{ t('explorer.empty') }}</p>
   </div>
 </template>
 
