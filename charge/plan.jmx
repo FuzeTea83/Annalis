@@ -21,7 +21,7 @@
       </ThreadGroup>
       <hashTree>
         <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults">
-          <stringProp name="HTTPSampler.domain">${__P(ip,10)}</stringProp>
+          <stringProp name="HTTPSampler.domain">${__P(ip,localhost)}</stringProp>
           <stringProp name="HTTPSampler.port">${__P(port,8000)}</stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
             <collectionProp name="Arguments.arguments"/>
