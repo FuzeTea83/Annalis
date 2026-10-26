@@ -34,6 +34,8 @@ services:
       PYTHONPATH: /app:/app/app
     command: >
       sh -c "uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    volumes:
+      - documents:/app/documents
     expose:
       - "8000"
     networks: [app-network]
@@ -63,6 +65,7 @@ services:
           cpus: "2.0"
 
 volumes:
+  documents:
   db_data:
 
 networks:
