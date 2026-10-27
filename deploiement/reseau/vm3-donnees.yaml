@@ -1,0 +1,6 @@
+network:
+  version: 2
+  ethernets:
+    enp0s3:
+      addresses:
+        - 10.10.10.30/24

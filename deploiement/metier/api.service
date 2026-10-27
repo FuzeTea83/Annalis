@@ -1,0 +1,13 @@
+[Unit]
+Description=API FastAPI avec Uvicorn
+After=network.target
+
+[Service]
+User=user
+WorkingDirectory=/home/user/VM
+EnvironmentFile=/home/user/VM/.env
+ExecStart=/home/user/VM/venv/bin/uvicorn app.main:app --host 10.10.10.20 --port 8000
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
